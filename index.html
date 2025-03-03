@@ -109,6 +109,26 @@
             cursor: url('https://xkh2008.github.io/Nacho.github.io/images/link-cursor.png'), auto; /* 链接悬停指针 */
         }
 
+        /* 鼠标状态切换时调整指针大小 */
+        .text-cursor, .link-cursor {
+            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/text-cursor.png'), auto;
+            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/text-cursor.png') 0 0, auto; /* 指定热点位置 */
+            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/text-cursor.png') 0 0, auto; /* 指定热点位置 */
+        }
+
+        .music-player button {
+            padding: 5px 10px;
+            border: none;
+            background: linear-gradient(135deg, #e91e63, #9c27b0);
+            color: #fff;
+            border-radius: 5px;
+            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/click-cursor.png') 0 0, auto; /* 调整点击指针大小 */
+        }
+
+        .music-player button:hover {
+            transform: scale(1.1);
+        }
+
         /* 音乐播放器样式 */
         .music-player {
             position: fixed;
@@ -121,19 +141,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-        }
-
-        .music-player button {
-            padding: 5px 10px;
-            border: none;
-            background: linear-gradient(135deg, #e91e63, #9c27b0);
-            color: #fff;
-            border-radius: 5px;
-            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/click-cursor.png'), auto; /* 点击指针 */
-        }
-
-        .music-player button:hover {
-            transform: scale(1.1);
         }
 
         .music-player .volume-slider {
@@ -271,11 +278,11 @@
 
         // 点击指针
         document.addEventListener('mousedown', () => {
-            document.body.style.cursor = `url('https://xkh2008.github.io/Nacho.github.io/images/文本选择.png'), auto`;
+            document.body.style.cursor = `url('https://xkh2008.github.io/Nacho.github.io/images/文本选择.png') 0 0, auto`;
         });
 
         document.addEventListener('mouseup', () => {
-            document.body.style.cursor = `url('https://xkh2008.github.io/Nacho.github.io/images/正常选择.png'), auto`;
+            document.body.style.cursor = `url('https://xkh2008.github.io/Nacho.github.io/images/正常选择.png') 0 0, auto`;
         });
     </script>
 
