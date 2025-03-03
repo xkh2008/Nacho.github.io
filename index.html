@@ -5,36 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人主页 - NachoCrazy</title>
     <style>
-        /* 动态背景样式 */
+        /* 动态壁纸样式 */
         body {
             margin: 0;
             padding: 0;
             height: 100vh;
             overflow: hidden;
-            background: linear-gradient(135deg, #fdd8c5, #e1bee7, #bbdefb);
-            animation: gradient 15s ease infinite;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            position: relative;
         }
 
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* 视频背景 */
+        #video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
         }
 
+        /* 卡片样式 */
         .card {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
             padding: 2rem;
-            max-width: 600px;
-            width: 90%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
-            position: relative;
-            z-index: 2;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .profile-image {
@@ -43,12 +44,10 @@
             border-radius: 50%;
             object-fit: cover;
             margin: 0 auto 1rem;
-            border: 4px solid #e91e63;
         }
 
         .profile-name {
             font-size: 2rem;
-            color: #e91e63;
             margin-bottom: 0.5rem;
         }
 
@@ -59,52 +58,42 @@
             border-radius: 20px;
             text-decoration: none;
             color: #fff;
-            background: linear-gradient(135deg, #e91e63, #9c27b0);
-            transition: transform 0.3s ease;
+            background: rgba(0, 0, 0, 0.5);
+            transition: background 0.3s ease;
         }
 
         .social-links a:hover {
-            transform: scale(1.1);
+            background: rgba(0, 0, 0, 0.7);
         }
 
         .contact-info {
             margin-top: 1.5rem;
-            color: #e91e63;
-            font-weight: bold;
-        }
-
-        .contact-info a {
-            color: #e91e63;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .contact-info a:hover {
-            color: #9c27b0;
-        }
-
-        .footer {
-            margin-top: 2rem;
             color: #fff;
         }
 
-        /* 鼠标拖尾效果 */
-        #sparkCanvas {
+        .contact-info a {
+            color: #fff;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            opacity: 0.7;
+        }
+
+        .footer {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            mix-blend-mode: overlay;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
         }
 
         /* 音乐播放器样式 */
         .music-player {
             position: fixed;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 20px;
             background: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 10px;
@@ -116,14 +105,14 @@
         .music-player button {
             padding: 5px 10px;
             border: none;
-            background: linear-gradient(135deg, #e91e63, #9c27b0);
+            background: rgba(0, 0, 0, 0.5);
             color: #fff;
             border-radius: 5px;
-            cursor: auto;
+            cursor: pointer;
         }
 
         .music-player button:hover {
-            transform: scale(1.1);
+            background: rgba(0, 0, 0, 0.7);
         }
 
         .music-player .volume-slider {
@@ -132,13 +121,19 @@
     </style>
 </head>
 <body>
+    <!-- 视频背景 -->
+    <video id="video-bg" autoplay loop muted playsinline>
+        <source src="https://xkh2008.github.io/Nacho.github.io/images/丛雨.png" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- 卡片内容 -->
     <div class="card">
         <img class="profile-image" src="https://xkh2008.github.io/Nacho.github.io/images/avatar.jpg" alt="头像">
         <div class="profile-name">NachoCrazy</div>
         <p>哔哩哔哩 UID: 1800466245</p>
 
         <div class="social-links">
-            <!-- B站链接 -->
             <a href="https://space.bilibili.com/1800466245?spm_id_from=333.337.0.0" target="_blank">访问我的哔哩哔哩空间</a>
         </div>
 
@@ -151,95 +146,10 @@
         </div>
     </div>
 
-    <!-- 鼠标拖尾效果 -->
-    <canvas id="sparkCanvas"></canvas>
-
-    <!-- 鼠标拖尾效果 -->
-    <script>
-        // 鼠标拖尾效果
-        const canvas = document.getElementById('sparkCanvas');
-        const ctx = canvas.getContext('2d');
-
-        // 设置画布大小
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        // 鼠标位置
-        let mouseX = 0;
-        let mouseY = 0;
-
-        // 粒子属性
-        const particles = [];
-        const particleCount = 50;
-        const particleSize = 1;
-        const particleColors = ['#ff80b5', '#ffbfbe', '#ff98a7', '#f16e8c', '#ea4c89'];
-
-        // 监听鼠标移动
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-
-            for (let i = 0; i < 3; i++) {
-                particles.push({
-                    x: mouseX,
-                    y: mouseY,
-                    vx: Math.random() * 2 - 1,
-                    vy: Math.random() * 2 - 1,
-                    color: particleColors[Math.floor(Math.random() * particleColors.length)],
-                    size: particleSize + Math.random() * 1,
-                    alpha: 1,
-                    life: 0.025 + Math.random() * 0.015
-                });
-            }
-        });
-
-        // 动画循环
-        function animate() {
-            requestAnimationFrame(animate);
-
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.globalCompositeOperation = 'lighter';
-
-            particles.forEach((particle, index) => {
-                particle.x += particle.vx;
-                particle.y += particle.vy;
-                particle.alpha -= particle.life;
-
-                if (particle.alpha <= 0) {
-                    particles.splice(index, 1);
-                } else {
-                    ctx.beginPath();
-                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 255, 255, ${particle.alpha})`;
-                    ctx.fill();
-                }
-            });
-
-            if (particles.length < particleCount) {
-                for (let i = 0; i < 3; i++) {
-                    particles.push({
-                        x: mouseX,
-                        y: mouseY,
-                        vx: Math.random() * 2 - 1,
-                        vy: Math.random() * 2 - 1,
-                        color: particleColors[Math.floor(Math.random() * particleColors.length)],
-                        size: particleSize + Math.random() * 1,
-                        alpha: 1,
-                        life: 0.025 + Math.random() * 0.015
-                    });
-                }
-            }
-        }
-
-        animate();
-    </script>
-
     <!-- 音乐播放器 -->
     <div class="music-player">
         <audio id="musicPlayer" controls autoplay loop>
-            <source src="https://xkh2008.github.io/Nacho.github.io/music/your-music-file.mp3" type="audio/mpeg">
+            <source src="https://xkh2008.github.io/Nacho.github.io/music/0.mp3" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
         <button onclick="toggleMusic()">暂停/播放</button>
@@ -247,6 +157,7 @@
     </div>
 
     <script>
+        // 音乐播放器控制
         const player = document.getElementById('musicPlayer');
         const toggleButton = document.querySelector('.music-player button');
         const volumeSlider = document.querySelector('.volume-slider');
@@ -265,10 +176,11 @@
             player.volume = value / 100;
         }
 
+        // 随机播放音乐
         const musicFiles = [
-            'https://xkh2008.github.io/Nacho.github.io/music/your-music-file1.mp3',
-            'https://xkh2008.github.io/Nacho.github.io/music/your-music-file2.mp3',
-            'https://xkh2008.github.io/Nacho.github.io/music/your-music-file3.mp3'
+            'https://xkh2008.github.io/Nacho.github.io/music/1.mp3',
+            'https://xkh2008.github.io/Nacho.github.io/music/2.mp3',
+            'https://xkh2008.github.io/Nacho.github.io/music/3.mp3'
         ];
 
         function playRandomMusic() {
