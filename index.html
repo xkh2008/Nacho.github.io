@@ -98,6 +98,37 @@
             pointer-events: none;
             mix-blend-mode: overlay;
         }
+
+        /* 音乐播放器样式 */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .music-player button {
+            padding: 5px 10px;
+            border: none;
+            background: linear-gradient(135deg, #e91e63, #9c27b0);
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .music-player button:hover {
+            transform: scale(1.1);
+        }
+
+        .music-player .volume-slider {
+            width: 100px;
+        }
     </style>
 </head>
 <body>
@@ -139,26 +170,25 @@
 
         // 粒子属性
         const particles = [];
-        const particleCount = 50; // 减少粒子数量
-        const particleSize = 1; // 减小粒子尺寸
-        const particleColors = ['#ff80b5', '#ffbfbe', '#ff98a7', '#f16e8c', '#ea4c89']; // 更柔和的粉色系颜色
+        const particleCount = 50;
+        const particleSize = 1;
+        const particleColors = ['#ff80b5', '#ffbfbe', '#ff98a7', '#f16e8c', '#ea4c89'];
 
         // 监听鼠标移动
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
 
-            // 生成粒子
-            for (let i = 0; i < 3; i++) { // 减少生成的粒子数量
+            for (let i = 0; i < 3; i++) {
                 particles.push({
                     x: mouseX,
                     y: mouseY,
-                    vx: Math.random() * 2 - 1, // 减缓粒子速度
+                    vx: Math.random() * 2 - 1,
                     vy: Math.random() * 2 - 1,
                     color: particleColors[Math.floor(Math.random() * particleColors.length)],
                     size: particleSize + Math.random() * 1,
                     alpha: 1,
-                    life: 0.025 + Math.random() * 0.015 // 缩短粒子生命
+                    life: 0.025 + Math.random() * 0.015
                 });
             }
         });
@@ -167,13 +197,11 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            // 清除画布
             ctx.globalCompositeOperation = 'destination-out';
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.globalCompositeOperation = 'lighter';
 
-            // 更新并绘制粒子
             particles.forEach((particle, index) => {
                 particle.x += particle.vx;
                 particle.y += particle.vy;
@@ -189,7 +217,6 @@
                 }
             });
 
-            // 保持粒子数量
             if (particles.length < particleCount) {
                 for (let i = 0; i < 3; i++) {
                     particles.push({
@@ -213,31 +240,22 @@
     <script>
         // 鼠标指针文件路径列表
         const cursorFiles = [
-            'https://xkh2008.github.io/Nacho.github.io/images/正常选择.PNG',
-            'https://xkh2008.github.io/Nacho.github.io/images/帮助选择.PNG',
-            'https://xkh2008.github.io/Nacho.github.io/images/文本选择.PNG'
+            'https://xkh2008.github.io/Nacho.github.io/images/正常选择.png',
+            'https://xkh2008.github.io/Nacho.github.io/images/文本选择.png',
+            'https://xkh2008.github.io/Nacho.github.io/images/帮助选择.png'
         ];
 
-        // 当前鼠标指针索引
         let currentCursorIndex = 0;
-
-        // 初始化鼠标指针
         document.body.style.cursor = `url(${cursorFiles[currentCursorIndex]}), auto`;
 
-        // 监听鼠标移动事件
-        let lastX = 0;
-        let lastY = 0;
-        let lastTime = 0;
         document.addEventListener('mousemove', (e) => {
             const now = Date.now();
             const deltaTime = now - lastTime;
 
-            // 计算鼠标移动速度
             const deltaX = e.clientX - lastX;
             const deltaY = e.clientY - lastY;
             const speed = Math.sqrt(deltaX * deltaX + deltaY * deltaY) / deltaTime;
 
-            // 根据鼠标移动速度切换指针
             if (speed > 0.5) {
                 currentCursorIndex = (currentCursorIndex + 1) % cursorFiles.length;
                 document.body.style.cursor = `url(${cursorFiles[currentCursorIndex]}), auto`;
@@ -248,13 +266,11 @@
             lastY = e.clientY;
         });
 
-        // 监听鼠标点击事件
         document.addEventListener('click', () => {
             currentCursorIndex = (currentCursorIndex + 1) % cursorFiles.length;
             document.body.style.cursor = `url(${cursorFiles[currentCursorIndex]}), auto`;
         });
 
-        // 监听鼠标滚轮事件
         document.addEventListener('wheel', () => {
             currentCursorIndex = (currentCursorIndex + 1) % cursorFiles.length;
             document.body.style.cursor = `url(${cursorFiles[currentCursorIndex]}), auto`;
@@ -272,7 +288,6 @@
     </div>
 
     <script>
-        // 音乐播放器控制
         const player = document.getElementById('musicPlayer');
         const toggleButton = document.querySelector('.music-player button');
         const volumeSlider = document.querySelector('.volume-slider');
@@ -291,7 +306,6 @@
             player.volume = value / 100;
         }
 
-        // 随机播放音乐
         const musicFiles = [
             'https://xkh2008.github.io/Nacho.github.io/music/1.mp3',
             'https://xkh2008.github.io/Nacho.github.io/music/2.mp3',
@@ -299,17 +313,10 @@
         ];
 
         function playRandomMusic() {
-            const currentIndex = musicFiles.indexOf(player.src);
-            if (currentIndex !== -1) {
-                musicFiles.splice(currentIndex, 1);
-            }
+            if (musicFiles.length === 0) return;
+
             const randomIndex = Math.floor(Math.random() * musicFiles.length);
             player.src = musicFiles[randomIndex];
-            player.addEventListener('ended', () => {
-                if (musicFiles.length > 0) {
-                    playRandomMusic();
-                }
-            });
             player.play();
         }
 
