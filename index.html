@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人主页 - NachoCrazy</title>
     <style>
-        /* 动态壁纸样式 */
         body {
             margin: 0;
             padding: 0;
@@ -16,19 +15,6 @@
             background-size: cover;
         }
 
-        /* 添加渐变叠加 */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
-            mix-blend-mode: overlay;
-        }
-
-        /* 卡片样式 */
         .card {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
@@ -41,63 +27,6 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
-        .profile-image {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 1rem;
-            border: 4px solid #66bb6a; /* 绿色边框 */
-        }
-
-        .username {
-            font-size: 1.5rem;
-            font-weight: bold; /* 字体加粗 */
-            color: #66bb6a; /* 绿色文字 */
-            margin-bottom: 0.5rem;
-        }
-
-        .social-links a {
-            display: inline-block;
-            margin: 1rem 0.5rem;
-            padding: 0.6rem 2rem;
-            border-radius: 20px;
-            text-decoration: none;
-            color: #66bb6a; /* 绿色文字 */
-            background: rgba(0, 0, 0, 0.5);
-            transition: background 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background: rgba(0, 0, 0, 0.7);
-        }
-
-        .contact-info {
-            margin-top: 2.5rem; /* 增加间距 */
-            color: #66bb6a; /* 绿色文字 */
-        }
-
-        .contact-info a {
-            color: #66bb6a; /* 绿色文字 */
-            text-decoration: none;
-            transition: opacity 0.3s ease;
-            display: block; /* 文字独占一行 */
-            margin-bottom: 0.5rem; /* 增加间距 */
-        }
-
-        .contact-info a:hover {
-            opacity: 0.7;
-        }
-
-        /* 年份样式 */
-        .footer {
-            position: absolute;
-            bottom: 20px;
-            left: 20px; /* 移到左下角 */
-            color: #66bb6a; /* 绿色文字 */
-        }
-
-        /* 音乐播放器样式 */
         .music-player {
             position: fixed;
             bottom: 20px;
@@ -114,7 +43,7 @@
         .music-player button {
             padding: 5px 10px;
             border: none;
-            color: #66bb6a; /* 绿色文字 */
+            color: #66bb6a;
             background: rgba(0, 0, 0, 0.1);
             border-radius: 5px;
             cursor: pointer;
@@ -124,63 +53,67 @@
         .music-player button:hover {
             background: rgba(0, 0, 0, 0.2);
         }
-
-        .music-player .volume-slider {
-            width: 100px;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            height: 8px;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .music-player .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            background: #66bb6a; /* 绿色滑块 */
-            border-radius: 50%;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
-    <!-- 卡片内容 -->
     <div class="card">
         <img class="profile-image" src="https://xkh2008.github.io/Nacho.github.io/images/avatar.jpg" alt="头像">
-        <div class="username">NachoCrazy</div> <!-- 添加用户名 -->
-        <p>哔哩哔哩 UID: <span style="margin-right: 0.5rem; display: inline-block;">1800466245</span></p> <!-- 增加内联间距 -->
-
+        <div class="username">NachoCrazy</div>
+        <p>哔哩哔哩 UID: <span>1800466245</span></p>
         <div class="social-links">
             <a href="https://space.bilibili.com/1800466245?spm_id_from=333.337.0.0" target="_blank">访问我的哔哩哔哩空间</a>
         </div>
-
         <div class="contact-info">
-            <span style="display: block; margin-bottom: 0.5rem;">联系我:</span> <!-- 使用块级元素来增加间距 -->
+            <span>联系我:</span>
             <a href="mailto:xkh2008@outlook.com">xkh2008@outlook.com</a>
         </div>
     </div>
 
-    <!-- 年份信息 -->
-    <div class="footer">
-        © 2025 - NachoCrazy
-    </div>
-
-    <!-- 音乐播放器 -->
     <div class="music-player">
-        <audio id="musicPlayer" controls autoplay loop>
-            <source src="https://xkh2008.github.io/Nacho.github.io/music/0.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
+        <img id="coverImage" style="width:50px;height:50px;border-radius:10px;">
+        <audio id="musicPlayer" controls></audio>
         <button onclick="toggleMusic()">暂停/播放</button>
         <input type="range" class="volume-slider" min="0" max="100" value="50" oninput="setVolume(this.value)">
+        <p id="lyricsDisplay"></p>
     </div>
 
     <script>
-        // 音乐播放器控制
         const player = document.getElementById('musicPlayer');
         const toggleButton = document.querySelector('.music-player button');
         const volumeSlider = document.querySelector('.volume-slider');
+        const coverImage = document.getElementById('coverImage');
+        const lyricsDisplay = document.getElementById('lyricsDisplay');
+        
+        let musicFiles = [];
+        const repoUrl = 'https://api.github.com/repos/xkh2008/Nacho.github.io/contents/music';
+        
+        async function fetchMusicFiles() {
+            try {
+                const response = await fetch(repoUrl);
+                const data = await response.json();
+                musicFiles = data.map(file => file.download_url).filter(url => url.endsWith('.mp3'));
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const selectedSong = urlParams.get('song') || '0.mp3'; // 默认播放 music 文件夹下的 0.mp3
+
+                const songUrl = musicFiles.find(url => url.includes(`/${selectedSong}`));
+                if (songUrl) {
+                    player.src = songUrl;
+                    player.play();
+                } else {
+                    playRandomMusic();
+                }
+            } catch (error) {
+                console.error('无法获取音乐文件:', error);
+            }
+        }
+
+        function playRandomMusic() {
+            if (musicFiles.length === 0) return;
+            const randomIndex = Math.floor(Math.random() * musicFiles.length);
+            player.src = musicFiles[randomIndex];
+            player.play();
+        }
 
         function toggleMusic() {
             if (player.paused) {
@@ -196,23 +129,20 @@
             player.volume = value / 100;
         }
 
-        // 随机播放音乐
-        const musicFiles = [
-            'https://xkh2008.github.io/Nacho.github.io/music/1.mp3',
-            'https://xkh2008.github.io/Nacho.github.io/music/2.mp3',
-            'https://xkh2008.github.io/Nacho.github.io/music/3.mp3'
-        ];
-
-        function playRandomMusic() {
-            if (musicFiles.length === 0) return;
-
-            const randomIndex = Math.floor(Math.random() * musicFiles.length);
-            player.src = musicFiles[randomIndex];
-            player.play();
+        function updateMediaInfo() {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: player.currentSrc.split('/').pop(),
+                    artist: '未知',
+                    album: 'NachoCrazy',
+                    artwork: [{ src: coverImage.src, sizes: '96x96', type: 'image/png' }]
+                });
+            }
         }
 
         player.addEventListener('ended', playRandomMusic);
-        playRandomMusic();
+        player.addEventListener('loadedmetadata', updateMediaInfo);
+        fetchMusicFiles();
     </script>
 </body>
 </html>
