@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人主页 - NachoCrazy</title>
     <style>
+        /* 动态壁纸样式 */
         body {
             margin: 0;
             padding: 0;
@@ -13,132 +14,213 @@
             position: relative;
             background: url('https://xkh2008.github.io/Nacho.github.io/images/丛雨.png') no-repeat center center fixed;
             background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Comic Sans MS', 'Arial', sans-serif;
-            color: #d63384;
         }
 
+        /* 添加渐变叠加 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+            mix-blend-mode: overlay;
+        }
+
+        /* 卡片样式 */
         .card {
-            background: rgba(255, 240, 245, 0.95);
-            border-radius: 20px;
-            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 2rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
-            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
-            border: 3px solid #ff9eb5;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .profile-image {
-            width: 130px;
-            height: 130px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
             object-fit: cover;
-            border: 5px solid #ff66a3;
+            margin: 0 auto 1rem;
+            border: 4px solid #e91e63; /* 粉色边框 */
         }
 
         .username {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            color: #ff66a3;
-            margin-bottom: 1rem;
+            color: #e91e63; /* 粉色文字 */
+            margin-bottom: 0.5rem;
         }
 
         .social-links a {
             display: inline-block;
-            padding: 0.8rem 2.5rem;
-            border-radius: 30px;
+            margin: 1rem 0.5rem;
+            padding: 0.6rem 2rem;
+            border-radius: 20px;
             text-decoration: none;
-            font-size: 1.2rem;
-            color: #fff;
-            background: linear-gradient(45deg, #ff66a3, #ff99cc);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.5);
+            color: #e91e63; /* 粉色文字 */
+            background: rgba(0, 0, 0, 0.5);
+            transition: background 0.3s ease;
         }
 
         .social-links a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(255, 105, 180, 0.7);
+            background: rgba(0, 0, 0, 0.7);
         }
 
+        .contact-info {
+            margin-top: 2.5rem;
+            color: #e91e63; /* 粉色文字 */
+        }
+
+        .contact-info a {
+            color: #e91e63; /* 粉色文字 */
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-info a:hover {
+            opacity: 0.7;
+        }
+
+        /* 年份样式 */
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #e91e63; /* 粉色文字 */
+        }
+
+        /* 音乐播放器样式 */
         .music-player {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: rgba(255, 240, 245, 0.95);
-            padding: 15px;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.5);
-            border: 2px solid #ff66a3;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .music-player button {
-            padding: 8px 15px;
+            padding: 5px 10px;
             border: none;
-            color: white;
-            background: linear-gradient(45deg, #ff66a3, #ff99cc);
-            border-radius: 10px;
+            color: #e91e63; /* 粉色文字 */
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s ease;
         }
 
         .music-player button:hover {
-            background: linear-gradient(45deg, #ff99cc, #ff66a3);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .music-player .volume-slider {
+            width: 100px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            height: 8px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .music-player .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #e91e63; /* 粉色滑块 */
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* 颜文字和语句容器 */
+        .cat-box {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.7); /* 透明背景 */
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            text-align: center;
+            z-index: 100; /* 确保文本框不会被其他元素遮挡 */
+        }
+
+        .cat-text {
+            margin-bottom: 1rem;
+            color: #e91e63;
+            font-size: 1.2rem;
+        }
+
+        .cat-button {
+            padding: 5px 10px;
+            border: none;
+            color: #e91e63;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .cat-button:hover {
+            background: rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 <body>
+    <!-- 卡片内容 -->
     <div class="card">
         <img class="profile-image" src="https://xkh2008.github.io/Nacho.github.io/images/avatar.jpg" alt="头像">
-        <div class="username">💖 NachoCrazy 💖</div>
-        <p>哔哩哔哩 UID: <span>1800466245</span></p>
+        <div class="username">NachoCrazy</div>
+        <p>哔哩哔哩 UID: <span style="margin-right: 0.5rem; display: inline-block;">1800466245</span></p>
+
         <div class="social-links">
-            <a href="https://space.bilibili.com/1800466245?spm_id_from=333.337.0.0" target="_blank">✨ 访问我的哔哩哔哩 ✨</a>
+            <a href="https://space.bilibili.com/1800466245?spm_id_from=333.337.0.0" target="_blank">访问我的哔哩哔哩空间</a>
         </div>
+
         <div class="contact-info">
-            <p>📩 联系我:</p>
+            <span style="display: block; margin-bottom: 0.5rem;">联系我:</span>
             <a href="mailto:xkh2008@outlook.com">xkh2008@outlook.com</a>
         </div>
     </div>
 
+    <!-- 年份信息 -->
+    <div class="footer">
+        © 2025 - NachoCrazy
+    </div>
+
+    <!-- 音乐播放器 -->
     <div class="music-player">
-        <img id="coverImage" style="width:50px;height:50px;border-radius:10px;">
-        <audio id="musicPlayer" controls></audio>
+        <audio id="musicPlayer" controls autoplay loop>
+            <source src="https://xkh2008.github.io/Nacho.github.io/music/0.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
         <button onclick="toggleMusic()">暂停/播放</button>
         <input type="range" class="volume-slider" min="0" max="100" value="50" oninput="setVolume(this.value)">
-        <p id="lyricsDisplay"></p>
+    </div>
+
+    <!-- 随机颜文字和语句容器 -->
+    <div class="cat-box">
+        <div class="cat-text" id="cat-text">加载中...</div>
+        <button onclick="showRandomContent()" class="cat-button">再来一个</button>
     </div>
 
     <script>
+        // 音乐播放器控制
         const player = document.getElementById('musicPlayer');
         const toggleButton = document.querySelector('.music-player button');
         const volumeSlider = document.querySelector('.volume-slider');
-        const coverImage = document.getElementById('coverImage');
-        const lyricsDisplay = document.getElementById('lyricsDisplay');
-        
-        let musicFiles = [];
-        const repoUrl = 'https://api.github.com/repos/xkh2008/Nacho.github.io/contents/music';
-        
-        async function fetchMusicFiles() {
-            try {
-                const response = await fetch(repoUrl);
-                const data = await response.json();
-                musicFiles = data.map(file => file.download_url).filter(url => url.endsWith('.mp3'));
-                playRandomMusic();
-            } catch (error) {
-                console.error('无法获取音乐文件:', error);
-            }
-        }
-
-        function playRandomMusic() {
-            if (musicFiles.length === 0) return;
-            const randomIndex = Math.floor(Math.random() * musicFiles.length);
-            player.src = musicFiles[randomIndex];
-            player.play();
-        }
 
         function toggleMusic() {
             if (player.paused) {
@@ -154,8 +236,25 @@
             player.volume = value / 100;
         }
 
+        // 随机播放音乐
+        const musicFiles = [
+            'https://xkh2008.github.io/Nacho.github.io/music/1.mp3',
+            'https://xkh2008.github.io/Nacho.github.io/music/2.mp3',
+            'https://xkh2008.github.io/Nacho.github.io/music/3.mp3'
+        ];
+
+        function playRandomMusic() {
+            if (musicFiles.length === 0) return;
+
+            const randomIndex = Math.floor(Math.random() * musicFiles.length);
+            player.src = musicFiles[randomIndex];
+            player.play();
+        }
+
         player.addEventListener('ended', playRandomMusic);
-        fetchMusicFiles();
-    </script>
-</body>
-</html>
+        playRandomMusic();
+
+        // 随机颜文字和语句
+        const catContent = [
+            { text: ';c 哈哈☺(・∀・)', emoji: '"c 哈哈 ☺(・∀・)' },
+            { text: '°˖
