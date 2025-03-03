@@ -17,7 +17,6 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/default-cursor.png'), auto; /* 默认鼠标指针 */
         }
 
         @keyframes gradient {
@@ -100,35 +99,6 @@
             mix-blend-mode: overlay;
         }
 
-        /* 鼠标状态切换样式 */
-        .text-cursor {
-            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/text-cursor.png'), auto; /* 文本选择指针 */
-        }
-
-        .link-cursor {
-            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/link-cursor.png'), auto; /* 链接悬停指针 */
-        }
-
-        /* 鼠标状态切换时调整指针大小 */
-        .text-cursor, .link-cursor {
-            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/text-cursor.png'), auto;
-            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/text-cursor.png') 0 0, auto; /* 指定热点位置 */
-            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/text-cursor.png') 0 0, auto; /* 指定热点位置 */
-        }
-
-        .music-player button {
-            padding: 5px 10px;
-            border: none;
-            background: linear-gradient(135deg, #e91e63, #9c27b0);
-            color: #fff;
-            border-radius: 5px;
-            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/click-cursor.png') 0 0, auto; /* 调整点击指针大小 */
-        }
-
-        .music-player button:hover {
-            transform: scale(1.1);
-        }
-
         /* 音乐播放器样式 */
         .music-player {
             position: fixed;
@@ -141,6 +111,19 @@
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+
+        .music-player button {
+            padding: 5px 10px;
+            border: none;
+            background: linear-gradient(135deg, #e91e63, #9c27b0);
+            color: #fff;
+            border-radius: 5px;
+            cursor: auto;
+        }
+
+        .music-player button:hover {
+            transform: scale(1.1);
         }
 
         .music-player .volume-slider {
@@ -253,39 +236,6 @@
         animate();
     </script>
 
-    <!-- 鼠标状态切换 -->
-    <script>
-        // 默认鼠标指针
-        document.body.style.cursor = `url('https://xkh2008.github.io/Nacho.github.io/images/正常选择.png'), auto`;
-
-        // 文本选择指针
-        document.addEventListener('mouseover', (e) => {
-            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
-                document.body.classList.add('text-cursor');
-            } else {
-                document.body.classList.remove('text-cursor');
-            }
-        });
-
-        // 链接悬停指针
-        document.addEventListener('mouseover', (e) => {
-            if (e.target.tagName === 'A') {
-                document.body.classList.add('link-cursor');
-            } else {
-                document.body.classList.remove('link-cursor');
-            }
-        });
-
-        // 点击指针
-        document.addEventListener('mousedown', () => {
-            document.body.style.cursor = `url('https://xkh2008.github.io/Nacho.github.io/images/文本选择.png') 0 0, auto`;
-        });
-
-        document.addEventListener('mouseup', () => {
-            document.body.style.cursor = `url('https://xkh2008.github.io/Nacho.github.io/images/正常选择.png') 0 0, auto`;
-        });
-    </script>
-
     <!-- 音乐播放器 -->
     <div class="music-player">
         <audio id="musicPlayer" controls autoplay loop>
@@ -316,9 +266,9 @@
         }
 
         const musicFiles = [
-            'https://xkh2008.github.io/Nacho.github.io/music/1.mp3',
-            'https://xkh2008.github.io/Nacho.github.io/music/2.mp3',
-            'https://xkh2008.github.io/Nacho.github.io/music/3.mp3'
+            'https://xkh2008.github.io/Nacho.github.io/music/your-music-file1.mp3',
+            'https://xkh2008.github.io/Nacho.github.io/music/your-music-file2.mp3',
+            'https://xkh2008.github.io/Nacho.github.io/music/your-music-file3.mp3'
         ];
 
         function playRandomMusic() {
