@@ -50,10 +50,11 @@
             border: 4px solid #66bb6a; /* 绿色边框 */
         }
 
-        .profile-name {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+        .username {
+            font-size: 1.5rem;
+            font-weight: bold; /* 字体加粗 */
             color: #66bb6a; /* 绿色文字 */
+            margin-bottom: 0.5rem;
         }
 
         .social-links a {
@@ -72,7 +73,7 @@
         }
 
         .contact-info {
-            margin-top: 1.5rem;
+            margin-top: 2.5rem; /* 增加间距 */
             color: #66bb6a; /* 绿色文字 */
         }
 
@@ -80,17 +81,19 @@
             color: #66bb6a; /* 绿色文字 */
             text-decoration: none;
             transition: opacity 0.3s ease;
+            display: block; /* 文字独占一行 */
+            margin-bottom: 0.5rem; /* 增加间距 */
         }
 
         .contact-info a:hover {
             opacity: 0.7;
         }
 
+        /* 年份样式 */
         .footer {
             position: absolute;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 20px; /* 移到左下角 */
             color: #66bb6a; /* 绿色文字 */
         }
 
@@ -145,20 +148,22 @@
     <!-- 卡片内容 -->
     <div class="card">
         <img class="profile-image" src="https://xkh2008.github.io/Nacho.github.io/images/avatar.jpg" alt="头像">
-        <div class="profile-name">NachoCrazy</div>
-        <p>哔哩哔哩 UID: 1800466245</p>
+        <div class="username">NachoCrazy</div> <!-- 添加用户名 -->
+        <p>哔哩哔哩 UID: <span style="margin-right: 0.5rem; display: inline-block;">1800466245</span></p> <!-- 增加内联间距 -->
 
         <div class="social-links">
             <a href="https://space.bilibili.com/1800466245?spm_id_from=333.337.0.0" target="_blank">访问我的哔哩哔哩空间</a>
         </div>
 
         <div class="contact-info">
-            联系我: <a href="mailto:xkh2008@outlook.com">xkh2008@outlook.com</a>
+            <span style="display: block; margin-bottom: 0.5rem;">联系我:</span> <!-- 使用块级元素来增加间距 -->
+            <a href="mailto:xkh2008@outlook.com">xkh2008@outlook.com</a>
         </div>
+    </div>
 
-        <div class="footer">
-            © 2025 - NachoCrazy
-        </div>
+    <!-- 年份信息 -->
+    <div class="footer">
+        © 2025 - NachoCrazy
     </div>
 
     <!-- 音乐播放器 -->
