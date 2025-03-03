@@ -17,6 +17,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/default-cursor.png'), auto; /* 默认鼠标指针 */
         }
 
         @keyframes gradient {
@@ -99,6 +100,15 @@
             mix-blend-mode: overlay;
         }
 
+        /* 鼠标状态切换样式 */
+        .text-cursor {
+            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/text-cursor.png'), auto; /* 文本选择指针 */
+        }
+
+        .link-cursor {
+            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/link-cursor.png'), auto; /* 链接悬停指针 */
+        }
+
         /* 音乐播放器样式 */
         .music-player {
             position: fixed;
@@ -119,7 +129,7 @@
             background: linear-gradient(135deg, #e91e63, #9c27b0);
             color: #fff;
             border-radius: 5px;
-            cursor: pointer;
+            cursor: url('https://xkh2008.github.io/Nacho.github.io/images/click-cursor.png'), auto; /* 点击指针 */
         }
 
         .music-player button:hover {
@@ -236,44 +246,36 @@
         animate();
     </script>
 
-    <!-- 鼠标指针切换 -->
+    <!-- 鼠标状态切换 -->
     <script>
-        // 鼠标指针文件路径列表
-        const cursorFiles = [
-            'https://xkh2008.github.io/Nacho.github.io/images/正常选择.png',
-            'https://xkh2008.github.io/Nacho.github.io/images/文本选择.png',
-            'https://xkh2008.github.io/Nacho.github.io/images/帮助选择.png'
-        ];
+        // 默认鼠标指针
+        document.body.style.cursor = `url('https://xkh2008.github.io/Nacho.github.io/images/正常选择.png'), auto`;
 
-        let currentCursorIndex = 0;
-        document.body.style.cursor = `url(${cursorFiles[currentCursorIndex]}), auto`;
-
-        document.addEventListener('mousemove', (e) => {
-            const now = Date.now();
-            const deltaTime = now - lastTime;
-
-            const deltaX = e.clientX - lastX;
-            const deltaY = e.clientY - lastY;
-            const speed = Math.sqrt(deltaX * deltaX + deltaY * deltaY) / deltaTime;
-
-            if (speed > 0.5) {
-                currentCursorIndex = (currentCursorIndex + 1) % cursorFiles.length;
-                document.body.style.cursor = `url(${cursorFiles[currentCursorIndex]}), auto`;
-                lastTime = now;
+        // 文本选择指针
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+                document.body.classList.add('text-cursor');
+            } else {
+                document.body.classList.remove('text-cursor');
             }
-
-            lastX = e.clientX;
-            lastY = e.clientY;
         });
 
-        document.addEventListener('click', () => {
-            currentCursorIndex = (currentCursorIndex + 1) % cursorFiles.length;
-            document.body.style.cursor = `url(${cursorFiles[currentCursorIndex]}), auto`;
+        // 链接悬停指针
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.tagName === 'A') {
+                document.body.classList.add('link-cursor');
+            } else {
+                document.body.classList.remove('link-cursor');
+            }
         });
 
-        document.addEventListener('wheel', () => {
-            currentCursorIndex = (currentCursorIndex + 1) % cursorFiles.length;
-            document.body.style.cursor = `url(${cursorFiles[currentCursorIndex]}), auto`;
+        // 点击指针
+        document.addEventListener('mousedown', () => {
+            document.body.style.cursor = `url('https://xkh2008.github.io/Nacho.github.io/images/文本选择.png'), auto`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            document.body.style.cursor = `url('https://xkh2008.github.io/Nacho.github.io/images/正常选择.png'), auto`;
         });
     </script>
 
