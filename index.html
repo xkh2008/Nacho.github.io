@@ -33,6 +33,8 @@
             width: 90%;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
+            position: relative;
+            z-index: 2;
         }
 
         .profile-image {
@@ -85,11 +87,22 @@
             margin-top: 2rem;
             color: #fff;
         }
+
+        /* 鼠标拖尾效果 */
+        #sparkCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
     </style>
 </head>
 <body>
     <div class="card">
-        <img class="profile-image" src="images/avatar.jpg" alt="头像">
+        <img class="profile-image" src="https://xkh2008.github.io/Nacho.github.io/images/avatar.jpg" alt="头像">
         <div class="profile-name">NachoCrazy</div>
         <p>哔哩哔哩 UID: 1800466245</p>
 
@@ -106,5 +119,202 @@
             © 2025 - NachoCrazy
         </div>
     </div>
+
+    <!-- 鼠标拖尾效果 -->
+    <canvas id="sparkCanvas"></canvas>
+
+    <!-- 鼠标拖尾效果 -->
+    <script>
+        // 鼠标拖尾效果
+        const canvas = document.getElementById('sparkCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 设置画布大小
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // 鼠标位置
+        let mouseX = 0;
+        let mouseY = 0;
+
+        // 粒子属性
+        const particles = [];
+        const particleCount = 50; // 减少粒子数量
+        const particleSize = 1; // 减小粒子尺寸
+        const particleColors = ['#ff80b5', '#ffbfbe', '#ff98a7', '#f16e8c', '#ea4c89']; // 更柔和的粉色系颜色
+
+        // 监听鼠标移动
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            // 生成粒子
+            for (let i = 0; i < 3; i++) { // 减少生成的粒子数量
+                particles.push({
+                    x: mouseX,
+                    y: mouseY,
+                    vx: Math.random() * 2 - 1, // 减缓粒子速度
+                    vy: Math.random() * 2 - 1,
+                    color: particleColors[Math.floor(Math.random() * particleColors.length)],
+                    size: particleSize + Math.random() * 1,
+                    alpha: 1,
+                    life: 0.025 + Math.random() * 0.015 // 缩短粒子生命
+                });
+            }
+        });
+
+        // 动画循环
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // 清除画布
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.globalCompositeOperation = 'lighter';
+
+            // 更新并绘制粒子
+            particles.forEach((particle, index) => {
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                particle.alpha -= particle.life;
+
+                if (particle.alpha <= 0) {
+                    particles.splice(index, 1);
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${particle.alpha})`;
+                    ctx.fill();
+                }
+            });
+
+            // 保持粒子数量
+            if (particles.length < particleCount) {
+                for (let i = 0; i < 3; i++) {
+                    particles.push({
+                        x: mouseX,
+                        y: mouseY,
+                        vx: Math.random() * 2 - 1,
+                        vy: Math.random() * 2 - 1,
+                        color: particleColors[Math.floor(Math.random() * particleColors.length)],
+                        size: particleSize + Math.random() * 1,
+                        alpha: 1,
+                        life: 0.025 + Math.random() * 0.015
+                    });
+                }
+            }
+        }
+
+        animate();
+    </script>
+
+    <!-- 鼠标指针切换 -->
+    <script>
+        // 鼠标指针文件路径列表
+        const cursorFiles = [
+            'https://xkh2008.github.io/Nacho.github.io/images/1.png',
+            'https://xkh2008.github.io/Nacho.github.io/images/2.png',
+            'https://xkh2008.github.io/Nacho.github.io/images/3.png'
+        ];
+
+        // 当前鼠标指针索引
+        let currentCursorIndex = 0;
+
+        // 初始化鼠标指针
+        document.body.style.cursor = `url(${cursorFiles[currentCursorIndex]}), auto`;
+
+        // 监听鼠标移动事件
+        let lastX = 0;
+        let lastY = 0;
+        let lastTime = 0;
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            const deltaTime = now - lastTime;
+
+            // 计算鼠标移动速度
+            const deltaX = e.clientX - lastX;
+            const deltaY = e.clientY - lastY;
+            const speed = Math.sqrt(deltaX * deltaX + deltaY * deltaY) / deltaTime;
+
+            // 根据鼠标移动速度切换指针
+            if (speed > 0.5) {
+                currentCursorIndex = (currentCursorIndex + 1) % cursorFiles.length;
+                document.body.style.cursor = `url(${cursorFiles[currentCursorIndex]}), auto`;
+                lastTime = now;
+            }
+
+            lastX = e.clientX;
+            lastY = e.clientY;
+        });
+
+        // 监听鼠标点击事件
+        document.addEventListener('click', () => {
+            currentCursorIndex = (currentCursorIndex + 1) % cursorFiles.length;
+            document.body.style.cursor = `url(${cursorFiles[currentCursorIndex]}), auto`;
+        });
+
+        // 监听鼠标滚轮事件
+        document.addEventListener('wheel', () => {
+            currentCursorIndex = (currentCursorIndex + 1) % cursorFiles.length;
+            document.body.style.cursor = `url(${cursorFiles[currentCursorIndex]}), auto`;
+        });
+    </script>
+
+    <!-- 音乐播放器 -->
+    <div class="music-player">
+        <audio id="musicPlayer" controls autoplay loop>
+            <source src="https://xkh2008.github.io/Nacho.github.io/music/your-music-file.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <button onclick="toggleMusic()">暂停/播放</button>
+        <input type="range" class="volume-slider" min="0" max="100" value="50" oninput="setVolume(this.value)">
+    </div>
+
+    <script>
+        // 音乐播放器控制
+        const player = document.getElementById('musicPlayer');
+        const toggleButton = document.querySelector('.music-player button');
+        const volumeSlider = document.querySelector('.volume-slider');
+
+        function toggleMusic() {
+            if (player.paused) {
+                player.play();
+                toggleButton.textContent = '暂停';
+            } else {
+                player.pause();
+                toggleButton.textContent = '播放';
+            }
+        }
+
+        function setVolume(value) {
+            player.volume = value / 100;
+        }
+
+        // 随机播放音乐
+        const musicFiles = [
+            'https://xkh2008.github.io/Nacho.github.io/music/1.mp3',
+            'https://xkh2008.github.io/Nacho.github.io/music/2.mp3',
+            'https://xkh2008.github.io/Nacho.github.io/music/3.mp3'
+        ];
+
+        function playRandomMusic() {
+            const currentIndex = musicFiles.indexOf(player.src);
+            if (currentIndex !== -1) {
+                musicFiles.splice(currentIndex, 1);
+            }
+            const randomIndex = Math.floor(Math.random() * musicFiles.length);
+            player.src = musicFiles[randomIndex];
+            player.addEventListener('ended', () => {
+                if (musicFiles.length > 0) {
+                    playRandomMusic();
+                }
+            });
+            player.play();
+        }
+
+        player.addEventListener('ended', playRandomMusic);
+        playRandomMusic();
+    </script>
 </body>
 </html>
