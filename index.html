@@ -202,7 +202,7 @@
 
     <!-- 音乐播放器 -->
     <div class="music-player">
-        <audio id="musicPlayer" controls autoplay loop>
+        <audio id="musicPlayer" controls autoplay>
             <source src="https://xkh2008.github.io/Nacho.github.io/music/0.mp3" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
@@ -212,7 +212,7 @@
 
     <!-- 随机颜文字和语句容器 -->
     <div class="cat-box">
-        <div class="cat-text" id="cat-text">加载中...</div>
+        <div class="cat-text" id="cat-text">颜文字加载中...</div>
         <button onclick="showRandomContent()" class="cat-button">再来一个</button>
     </div>
 
@@ -238,24 +238,24 @@
 
         // 随机播放音乐
         const musicFiles = [
-            'https://xkh2008.github.io/Nacho.github.io/music/0.mp3',
             'https://xkh2008.github.io/Nacho.github.io/music/1.mp3',
             'https://xkh2008.github.io/Nacho.github.io/music/2.mp3',
             'https://xkh2008.github.io/Nacho.github.io/music/3.mp3'
         ];
 
+        let currentSongIndex = 0;
+
         function playRandomMusic() {
             if (musicFiles.length === 0) return;
 
-            const randomIndex = Math.floor(Math.random() * musicFiles.length);
-            player.src = musicFiles[randomIndex];
+            currentSongIndex = Math.floor(Math.random() * musicFiles.length);
+            player.src = musicFiles[currentSongIndex];
             player.play();
         }
 
         player.addEventListener('ended', playRandomMusic);
-        playRandomMusic();
 
         // 随机颜文字和语句
         const catContent = [
-            { text: ';c 哈哈☺(・∀・)', emoji: '"c 哈哈 ☺(・∀・)' },
-{ text: '°
+            ';c 哈哈☺(・∀・)',
+            '° Ayrıca
