@@ -13,58 +13,93 @@
             position: relative;
             background: url('https://xkh2008.github.io/Nacho.github.io/images/丛雨.png') no-repeat center center fixed;
             background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            color: #d63384;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            padding: 2rem;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            background: rgba(255, 240, 245, 0.95);
+            border-radius: 20px;
+            padding: 2.5rem;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+            border: 3px solid #ff9eb5;
+        }
+
+        .profile-image {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #ff66a3;
+        }
+
+        .username {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff66a3;
+            margin-bottom: 1rem;
+        }
+
+        .social-links a {
+            display: inline-block;
+            padding: 0.8rem 2.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            color: #fff;
+            background: linear-gradient(45deg, #ff66a3, #ff99cc);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.5);
+        }
+
+        .social-links a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 105, 180, 0.7);
         }
 
         .music-player {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px;
-            border-radius: 10px;
+            background: rgba(255, 240, 245, 0.95);
+            padding: 15px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.5);
+            border: 2px solid #ff66a3;
         }
 
         .music-player button {
-            padding: 5px 10px;
+            padding: 8px 15px;
             border: none;
-            color: #66bb6a;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
+            color: white;
+            background: linear-gradient(45deg, #ff66a3, #ff99cc);
+            border-radius: 10px;
             cursor: pointer;
             transition: background 0.3s ease;
         }
 
         .music-player button:hover {
-            background: rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #ff99cc, #ff66a3);
         }
     </style>
 </head>
 <body>
     <div class="card">
         <img class="profile-image" src="https://xkh2008.github.io/Nacho.github.io/images/avatar.jpg" alt="头像">
-        <div class="username">NachoCrazy</div>
+        <div class="username">💖 NachoCrazy 💖</div>
         <p>哔哩哔哩 UID: <span>1800466245</span></p>
         <div class="social-links">
-            <a href="https://space.bilibili.com/1800466245?spm_id_from=333.337.0.0" target="_blank">访问我的哔哩哔哩空间</a>
+            <a href="https://space.bilibili.com/1800466245?spm_id_from=333.337.0.0" target="_blank">✨ 访问我的哔哩哔哩 ✨</a>
         </div>
         <div class="contact-info">
-            <span>联系我:</span>
+            <p>📩 联系我:</p>
             <a href="mailto:xkh2008@outlook.com">xkh2008@outlook.com</a>
         </div>
     </div>
@@ -92,17 +127,7 @@
                 const response = await fetch(repoUrl);
                 const data = await response.json();
                 musicFiles = data.map(file => file.download_url).filter(url => url.endsWith('.mp3'));
-
-                const urlParams = new URLSearchParams(window.location.search);
-                const selectedSong = urlParams.get('song') || '0.mp3'; // 默认播放 music 文件夹下的 0.mp3
-
-                const songUrl = musicFiles.find(url => url.includes(`/${selectedSong}`));
-                if (songUrl) {
-                    player.src = songUrl;
-                    player.play();
-                } else {
-                    playRandomMusic();
-                }
+                playRandomMusic();
             } catch (error) {
                 console.error('无法获取音乐文件:', error);
             }
@@ -129,19 +154,7 @@
             player.volume = value / 100;
         }
 
-        function updateMediaInfo() {
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: player.currentSrc.split('/').pop(),
-                    artist: '未知',
-                    album: 'NachoCrazy',
-                    artwork: [{ src: coverImage.src, sizes: '96x96', type: 'image/png' }]
-                });
-            }
-        }
-
         player.addEventListener('ended', playRandomMusic);
-        player.addEventListener('loadedmetadata', updateMediaInfo);
         fetchMusicFiles();
     </script>
 </body>
