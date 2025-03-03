@@ -12,17 +12,20 @@
             height: 100vh;
             overflow: hidden;
             position: relative;
+            background: url('https://xkh2008.github.io/Nacho.github.io/images/丛雨.png') no-repeat center center fixed;
+            background-size: cover;
         }
 
-        /* 视频背景 */
-        #video-bg {
-            position: fixed;
+        /* 添加渐变叠加 */
+        body::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            z-index: -1;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+            mix-blend-mode: overlay;
         }
 
         /* 卡片样式 */
@@ -44,6 +47,7 @@
             border-radius: 50%;
             object-fit: cover;
             margin: 0 auto 1rem;
+            border: 4px solid #e91e63;
         }
 
         .profile-name {
@@ -100,33 +104,43 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .music-player button {
             padding: 5px 10px;
             border: none;
-            background: rgba(0, 0, 0, 0.5);
-            color: #fff;
+            color: #e91e63;
+            background: rgba(0, 0, 0, 0.1);
             border-radius: 5px;
             cursor: pointer;
+            transition: background 0.3s ease;
         }
 
         .music-player button:hover {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .music-player .volume-slider {
             width: 100px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            height: 8px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .music-player .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #e91e63;
+            border-radius: 50%;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <!-- 视频背景 -->
-    <video id="video-bg" autoplay loop muted playsinline>
-        <source src="https://xkh2008.github.io/Nacho.github.io/images/丛雨.png" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-
     <!-- 卡片内容 -->
     <div class="card">
         <img class="profile-image" src="https://xkh2008.github.io/Nacho.github.io/images/avatar.jpg" alt="头像">
