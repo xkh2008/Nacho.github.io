@@ -192,6 +192,24 @@
         .social-links a:hover {
             background: rgba(0, 0, 0, 0.7);
         }
+
+        /* 提示语样式 */
+        .tooltip {
+            position: fixed;
+            bottom: 100px; /* 提示语位置 */
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            z-index: 100; /* 确保提示语不会被其他元素遮挡 */
+        }
+
+        .tooltip-text {
+            color: #e91e63; /* 粉色文字 */
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
@@ -232,17 +250,23 @@
         <button onclick="showRandomContent()" class="cat-button">再来一个</button>
     </div>
 
+    <!-- 提示语 -->
+    <div class="tooltip" id="tooltip">
+        <div class="tooltip-text">点击播放或暂停可以切换歌曲</div>
+    </div>
+
     <script>
-         // 音乐播放器控制
+        // 音乐播放器控制
         const player = document.getElementById('musicPlayer');
         const toggleButton = document.querySelector('.music-player button');
         const volumeSlider = document.querySelector('.volume-slider');
-		const cater = document.getElementById('cat-text');
+        const cater = document.getElementById('cat-text');
+        const tooltip = document.getElementById('tooltip');
 
         function toggleMusic() {
             if (player.paused) {
                 playRandomMusic();
-				player.play();
+                player.play();
                 toggleButton.textContent = '暂停';
             } else {
                 player.pause();
@@ -271,8 +295,17 @@
             //player.play();
         }
 
-        //player.addEventListener('ended', playRandomMusic);
-        
+        // 提示语只在初次进入网站时显示一次
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查是否是初次访问
+            if (!localStorage.getItem('visited')) {
+                tooltip.style.display = 'block';
+                localStorage.setItem('visited', true);
+            } else {
+                tooltip.style.display = 'none';
+            }
+        });
+
         // 随机颜文字和语句
         const catContent = [
             'Ciallo～(∠・ω< )⌒★',
