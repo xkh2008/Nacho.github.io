@@ -233,16 +233,16 @@
     </div>
 
     <script>
-        // 音乐播放器控制
+         // 音乐播放器控制
         const player = document.getElementById('musicPlayer');
         const toggleButton = document.querySelector('.music-player button');
         const volumeSlider = document.querySelector('.volume-slider');
-        const cater = document.getElementById('cat-text');
+		const cater = document.getElementById('cat-text');
 
         function toggleMusic() {
             if (player.paused) {
                 playRandomMusic();
-                player.play();
+				player.play();
                 toggleButton.textContent = '暂停';
             } else {
                 player.pause();
@@ -272,7 +272,7 @@
         }
 
         //player.addEventListener('ended', playRandomMusic);
-
+        
         // 随机颜文字和语句
         const catContent = [
             'Ciallo～(∠・ω< )⌒★',
