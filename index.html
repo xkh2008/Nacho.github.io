@@ -221,10 +221,12 @@
         const player = document.getElementById('musicPlayer');
         const toggleButton = document.querySelector('.music-player button');
         const volumeSlider = document.querySelector('.volume-slider');
+		const cater = document.getElementById('cat-text');
 
         function toggleMusic() {
             if (player.paused) {
-                player.play();
+                playRandomMusic();
+				player.play();
                 toggleButton.textContent = '暂停';
             } else {
                 player.pause();
@@ -250,12 +252,22 @@
 
             currentSongIndex = Math.floor(Math.random() * musicFiles.length);
             player.src = musicFiles[currentSongIndex];
-            player.play();
+            //player.play();
         }
 
-        player.addEventListener('ended', playRandomMusic);
+        //player.addEventListener('ended', playRandomMusic);
 
         // 随机颜文字和语句
         const catContent = [
             ';c 哈哈☺(・∀・)',
-            '° Ayrıca
+            '° Ayrıca'
+			];
+		function showRandomContent() {
+			if (catContent == 0) return;
+			
+			catIndex = Math.floor(Math.random() * catContent.length);
+			cater.textContent = catContent[catIndex];
+		}
+	</script>
+</body>
+</html>
