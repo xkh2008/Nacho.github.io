@@ -210,120 +210,31 @@
             color: #e91e63; /* 粉色文字 */
             font-size: 1.2rem;
         }
-    </style>
-</head>
-<body>
-    <!-- 卡片内容 -->
-    <div class="card">
-        <img class="profile-image" src="https://xkh2008.github.io/Nacho.github.io/images/avatar.jpg" alt="头像">
-        <div class="username">NachoCrazy</div>
-        <p>哔哩哔哩 UID: <span style="margin-right: 0.5rem; display: inline-block;">1800466245</span></p>
 
-        <div class="social-links">
-            <a href="https://space.bilibili.com/1800466245?spm_id_from=333.337.0.0" target="_blank">访问我的哔哩哔哩空间</a>
-        </div>
-
-        <div class="contact-info">
-            <span style="display: block; margin-bottom: 0.5rem;">联系我:</span>
-            <a href="mailto:xkh2008@outlook.com">xkh2008@outlook.com</a>
-        </div>
-    </div>
-
-    <!-- 年份信息 -->
-    <div class="footer">
-        © 2025 - NachoCrazy
-    </div>
-
-    <!-- 音乐播放器 -->
-    <div class="music-player">
-        <audio id="musicPlayer" controls autoplay>
-            <source src="https://xkh2008.github.io/Nacho.github.io/music/0.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-        <button onclick="toggleMusic()">暂停/播放</button>
-        <input type="range" class="volume-slider" min="0" max="100" value="50" oninput="setVolume(this.value)">
-    </div>
-
-    <!-- 随机颜文字和语句容器 -->
-    <div class="cat-box">
-        <div class="cat-text" id="cat-text">颜文字加载中...</div>
-        <button onclick="showRandomContent()" class="cat-button">再来一个</button>
-    </div>
-
-    <!-- 提示语 -->
-    <div class="tooltip" id="tooltip">
-        <div class="tooltip-text">点击播放或暂停可以切换歌曲</div>
-    </div>
-
-    <script>
-        // 音乐播放器控制
-        const player = document.getElementById('musicPlayer');
-        const toggleButton = document.querySelector('.music-player button');
-        const volumeSlider = document.querySelector('.volume-slider');
-        const cater = document.getElementById('cat-text');
-        const tooltip = document.getElementById('tooltip');
-
-        function toggleMusic() {
-            if (player.paused) {
-                playRandomMusic();
-                player.play();
-                toggleButton.textContent = '暂停';
-            } else {
-                player.pause();
-                toggleButton.textContent = '播放';
-            }
+        /* 欢迎信息样式 */
+        .welcome-message {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            color: #e91e63;
+            font-weight: bold;
         }
 
-        function setVolume(value) {
-            player.volume = value / 100;
+        /* 访客计数器样式 */
+        .visitor-count {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 1rem;
+            color: #e91e63;
         }
 
-        // 随机播放音乐
-        const musicFiles = [
-            'https://xkh2008.github.io/Nacho.github.io/music/1.mp3',
-            'https://xkh2008.github.io/Nacho.github.io/music/2.mp3',
-            'https://xkh2008.github.io/Nacho.github.io/music/3.mp3'
-        ];
-
-        let currentSongIndex = 0;
-
-        function playRandomMusic() {
-            if (musicFiles.length === 0) return;
-
-            currentSongIndex = Math.floor(Math.random() * musicFiles.length);
-            player.src = musicFiles[currentSongIndex];
-            //player.play();
-        }
-
-        // 提示语只在初次进入网站时显示一次
-        document.addEventListener('DOMContentLoaded', function() {
-            // 检查是否是初次访问
-            if (!localStorage.getItem('visited')) {
-                tooltip.style.display = 'block';
-                localStorage.setItem('visited', true);
-            } else {
-                tooltip.style.display = 'none';
-            }
-        });
-
-        // 随机颜文字和语句
-        const catContent = [
-            'Ciallo～(∠・ω< )⌒★',
-            '～卖萌中ヾ(=^･ω･^=)ノ',
-            '(=^･ω･^=)',
-            '喵喵！(*^ω^*)',
-            '(⁄ ⁄•⁄ω⁄•⁄ ⁄) ฅ 要摸摸头喵~',
-            '(=^･ｪ･^=) ฅ 今天的罐罐呢？',
-            '(=｀ω´=) ฅ 喵爪攻击！',
-            '(=✧ω✧=) ฅ 小鱼干分你一半！'
-        ];
-
-        function showRandomContent() {
-            if (catContent.length === 0) return;
-
-            const catIndex = Math.floor(Math.random() * catContent.length);
-            cater.textContent = catContent[catIndex];
-        }
-    </script>
-</body>
-</html>
+        /* 回到顶部按钮样式 */
+        #scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 80px;
+            padding: 10px;
+            background: rgba(0, 0, 
