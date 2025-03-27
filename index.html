@@ -1027,8 +1027,18 @@
             }
         });
 
-        // 确保管理员登录按钮在页面上可见
+        // 确保管理员登录按钮在页面上可见并绑定点击事件
         adminLoginButton.style.display = 'block';
+        adminLoginButton.addEventListener('click', () => {
+            adminPanel.style.display = 'block';
+        });
+
+        // 关闭管理员登录面板
+        adminPanel.addEventListener('click', (e) => {
+            if (e.target === adminPanel) {
+                adminPanel.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
