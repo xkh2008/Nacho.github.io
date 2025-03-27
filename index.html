@@ -474,6 +474,32 @@
             border-radius: 3px;
             cursor: pointer;
         }
+
+        /* 管理员创建面板 */
+        #admin-create {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        #admin-create-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #e91e63;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -598,6 +624,16 @@
         <div id="user-list"></div>
     </div>
 
+    <!-- 管理员创建面板 -->
+    <button id="admin-create-button" onclick="showAdminCreatePanel()">创建管理员账号</button>
+    <div id="admin-create">
+        <h3>创建管理员账号</h3>
+        <input type="text" id="create-admin-username" placeholder="管理员用户名">
+        <input type="password" id="create-admin-password" placeholder="管理员密码">
+        <input type="email" id="create-admin-email" placeholder="管理员邮箱">
+        <button onclick="createAdmin()">创建</button>
+    </div>
+
     <script>
         // 音乐播放器控制
         const player = document.getElementById('musicPlayer');
@@ -622,6 +658,8 @@
         const adminPanel = document.getElementById('admin-panel');
         const userManagement = document.getElementById('user-management');
         const userList = document.getElementById('user-list');
+        const adminCreateButton = document.getElementById('admin-create-button');
+        const adminCreatePanel = document.getElementById('admin-create');
 
         // 用户信息存储在 localStorage 中
         let currentUser = null;
@@ -682,6 +720,12 @@
 
             // 检查用户是否已登录
             checkLoginStatus();
+
+            // 检查是否已经创建了管理员账号
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (Object.keys(users).length > 0) {
+                adminCreateButton.style.display = 'none';
+            }
         });
 
         // 更新欢迎信息
@@ -987,28 +1031,40 @@
             return profanityList.some(word => comment.includes(word));
         }
 
-        // 注册管理员账号（需要在页面加载后调用）
-        function registerAdmin() {
-            const adminUsername = 'admin';
-            const adminPassword = 'admin123';
-            const adminEmail = 'admin@example.com';
-
-            const users = JSON.parse(localStorage.getItem('users')) || {};
-            if (!users[adminUsername]) {
-                users[adminUsername] = {
-                    password: adminPassword,
-                    email: adminEmail,
-                    isBanned: false,
-                    isMuted: false,
-                    isAdmin: true
-                };
-                localStorage.setItem('users', JSON.stringify(users));
-                alert('管理员账号已创建：用户名 admin，密码 admin123');
-            }
+        // 创建管理员账号面板
+        function showAdminCreatePanel() {
+            adminCreatePanel.style.display = 'block';
         }
 
-        // 注册管理员账号（只需调用一次）
-        // registerAdmin();
+        // 创建管理员账号
+        function createAdmin() {
+            const adminUsername = document.getElementById('create-admin-username').value;
+            const adminPassword = document.getElementById('create-admin-password').value;
+            const adminEmail = document.getElementById('create-admin-email').value;
+
+            if (!adminUsername || !adminPassword || !adminEmail) {
+                alert('请填写所有信息！');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[adminUsername]) {
+                alert('用户名已存在！');
+                return;
+            }
+
+            users[adminUsername] = {
+                password: adminPassword,
+                email: adminEmail,
+                isBanned: false,
+                isMuted: false,
+                isAdmin: true
+            };
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('管理员账号创建成功！');
+            adminCreatePanel.style.display = 'none';
+            adminCreateButton.style.display = 'none';
+        }
 
         // 退出登录
         function logout() {
@@ -1039,11 +1095,6 @@
                 adminPanel.style.display = 'none';
             }
         });
-
-        // 创建管理员账号（只需调用一次）
-        if (!localStorage.getItem('users')) {
-            registerAdmin();
-        }
     </script>
 </body>
 </html>
