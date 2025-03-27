@@ -247,22 +247,28 @@
 
         /* 评论区样式 */
         .comments-section {
-            position: absolute;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
             max-width: 600px;
             background: rgba(255, 255, 255, 0.9);
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 10px 10px 0 0;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .comments-section.open {
+            transform: translateY(0);
         }
 
         .comments-section h3 {
             color: #e91e63;
             text-align: center;
             margin-top: 0;
+            margin-bottom: 10px;
         }
 
         #comments-list {
@@ -295,6 +301,20 @@
             cursor: pointer;
         }
 
+        #toggle-comments {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #e91e63;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
         /* 天气信息样式 */
         .weather-info {
             position: absolute;
@@ -314,6 +334,88 @@
 
         #weather-text {
             color: #e91e63;
+        }
+
+        /* 登录模块样式 */
+        .login-section {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px 0 0 10px;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .login-section.open {
+            transform: translateX(0);
+        }
+
+        .login-section h3 {
+            color: #e91e63;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .login-form, .register-form {
+            display: none;
+        }
+
+        .login-form.active, .register-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #e91e63;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e91e63;
+            border-radius: 5px;
+        }
+
+        .form-buttons {
+            margin-top: 20px;
+        }
+
+        .form-buttons button {
+            padding: 8px 15px;
+            background: #e91e63;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .form-buttons a {
+            color: #e91e63;
+            text-decoration: none;
+        }
+
+        #toggle-login {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #e91e63;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -370,18 +472,61 @@
     <button id="scroll-to-top">回到顶部</button>
 
     <!-- 评论区 -->
-    <div class="comments-section">
+    <div class="comments-section" id="comments-section">
         <h3>留言板</h3>
         <div id="comments-list"></div>
         <input type="text" id="comment-input" placeholder="请输入评论">
         <button id="post-comment">发表评论</button>
     </div>
+    <button id="toggle-comments">打开留言板</button>
 
     <!-- 天气信息 -->
     <div class="weather-info">
         <h3>当前天气</h3>
         <div id="weather-text">加载中...</div>
     </div>
+
+    <!-- 登录模块 -->
+    <div class="login-section" id="login-section">
+        <h3>用户登录</h3>
+        <div class="login-form active" id="login-form">
+            <div class="form-group">
+                <label for="login-username">用户名</label>
+                <input type="text" id="login-username" placeholder="请输入用户名">
+            </div>
+            <div class="form-group">
+                <label for="login-password">密码</label>
+                <input type="password" id="login-password" placeholder="请输入密码">
+            </div>
+            <div class="form-buttons">
+                <button onclick="login()">登录</button>
+                <a href="#" onclick="showRegisterForm()">注册</a>
+            </div>
+        </div>
+        <div class="register-form" id="register-form">
+            <div class="form-group">
+                <label for="register-username">用户名</label>
+                <input type="text" id="register-username" placeholder="请输入用户名">
+            </div>
+            <div class="form-group">
+                <label for="register-password">密码</label>
+                <input type="password" id="register-password" placeholder="请输入密码">
+            </div>
+            <div class="form-group">
+                <label for="register-password2">确认密码</label>
+                <input type="password" id="register-password2" placeholder="请再次输入密码">
+            </div>
+            <div class="form-group">
+                <label for="register-email">邮箱</label>
+                <input type="email" id="register-email" placeholder="请输入邮箱">
+            </div>
+            <div class="form-buttons">
+                <button onclick="register()">注册</button>
+                <a href="#" onclick="showLoginForm()">返回登录</a>
+            </div>
+        </div>
+    </div>
+    <button id="toggle-login">登录/注册</button>
 
     <script>
         // 音乐播放器控制
@@ -396,7 +541,16 @@
         const commentInput = document.getElementById('comment-input');
         const postCommentButton = document.getElementById('post-comment');
         const commentsList = document.getElementById('comments-list');
+        const commentsSection = document.getElementById('comments-section');
+        const toggleCommentsButton = document.getElementById('toggle-comments');
         const weatherText = document.getElementById('weather-text');
+        const loginSection = document.getElementById('login-section');
+        const toggleLoginButton = document.getElementById('toggle-login');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+
+        // 用户信息存储在 localStorage 中
+        let currentUser = null;
 
         function toggleMusic() {
             if (player.paused) {
@@ -450,6 +604,9 @@
 
             // 加载天气信息
             fetchWeather();
+
+            // 检查用户是否已登录
+            checkLoginStatus();
         });
 
         // 更新欢迎信息
@@ -520,30 +677,117 @@
         }
 
         postCommentButton.addEventListener('click', () => {
+            if (!currentUser) {
+                alert('请先登录！');
+                return;
+            }
+
             const newComment = commentInput.value.trim();
             if (newComment) {
                 const comments = JSON.parse(localStorage.getItem('comments')) || [];
-                comments.push(newComment);
+                comments.push(`用户 ${currentUser}：${newComment}`);
                 localStorage.setItem('comments', JSON.stringify(comments));
                 loadComments();
                 commentInput.value = '';
             }
         });
 
+        toggleCommentsButton.addEventListener('click', () => {
+            commentsSection.classList.toggle('open');
+        });
+
         // 天气信息
         async function fetchWeather() {
             try {
-                const apiKey = '35fafa8e097d1ccde3f3af2188d199ad'; // 替换为你的 OpenWeatherMap API Key
-                const city = 'AnHui'; // 替换为你想显示的城市
-                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&lang=zh_cn&units=metric`);
+                const apiKey = 'dd1bab1dcab24ab5a6a80bdf04cb9c07'; // 替换为你的和风天气 API Key
+                const city = '安徽'; // 替换为你想显示的城市
+                const response = await fetch(`https://devapi.qweather.com/v7/weather/now?location=${city}&key=${apiKey}`);
                 const data = await response.json();
-                const weatherDescription = data.weather[0].description;
-                const temperature = data.main.temp;
+                const weatherDescription = data.now.text;
+                const temperature = data.now.temp;
                 weatherText.textContent = `天气：${weatherDescription}，温度：${temperature}°C`;
             } catch (error) {
                 weatherText.textContent = '无法获取天气信息';
             }
         }
+
+        // 登录模块功能
+        function checkLoginStatus() {
+            currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                loginSection.classList.remove('open');
+                toggleLoginButton.textContent = '退出登录';
+            } else {
+                toggleLoginButton.textContent = '登录/注册';
+            }
+        }
+
+        function showLoginForm() {
+            loginForm.classList.add('active');
+            registerForm.classList.remove('active');
+        }
+
+        function showRegisterForm() {
+            registerForm.classList.add('active');
+            loginForm.classList.remove('active');
+        }
+
+        function login() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[username] && users[username].password === password) {
+                currentUser = username;
+                localStorage.setItem('currentUser', username);
+                checkLoginStatus();
+                loginSection.classList.remove('open');
+                alert('登录成功！');
+            } else {
+                alert('用户名或密码错误！');
+            }
+        }
+
+        function register() {
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            const password2 = document.getElementById('register-password2').value;
+            const email = document.getElementById('register-email').value;
+
+            if (!username || !password || !password2 || !email) {
+                alert('请填写所有信息！');
+                return;
+            }
+
+            if (password !== password2) {
+                alert('两次输入的密码不一致！');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[username]) {
+                alert('用户名已存在！');
+                return;
+            }
+
+            users[username] = {
+                password: password,
+                email: email
+            };
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('注册成功！请登录。');
+            showLoginForm();
+        }
+
+        toggleLoginButton.addEventListener('click', () => {
+            if (currentUser) {
+                currentUser = null;
+                localStorage.removeItem('currentUser');
+                checkLoginStatus();
+            } else {
+                loginSection.classList.toggle('open');
+            }
+        });
     </script>
 </body>
 </html>
