@@ -1039,6 +1039,11 @@
                 adminPanel.style.display = 'none';
             }
         });
+
+        // 创建管理员账号（只需调用一次）
+        if (!localStorage.getItem('users')) {
+            registerAdmin();
+        }
     </script>
 </body>
 </html>
