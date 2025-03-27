@@ -1011,6 +1011,23 @@
 
         // 注册管理员账号（只需调用一次）
         // registerAdmin();
+
+        // 退出登录
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            checkLoginStatus();
+            alert('已退出登录');
+        }
+
+        // 修复退出登录功能
+        toggleLoginButton.addEventListener('click', () => {
+            if (currentUser) {
+                logout();
+            } else {
+                loginSection.classList.add('open');
+            }
+        });
     </script>
 </body>
 </html>
