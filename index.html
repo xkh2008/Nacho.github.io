@@ -237,4 +237,313 @@
             bottom: 20px;
             right: 80px;
             padding: 10px;
-            background: rgba(0, 0, 
+            background: rgba(0, 0, 0, 0.5);
+            color: #e91e63;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* 评论区样式 */
+        .comments-section {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .comments-section h3 {
+            color: #e91e63;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        #comments-list {
+            margin-bottom: 20px;
+            height: 200px;
+            overflow-y: auto;
+        }
+
+        .comment {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        #comment-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #e91e63;
+            border-radius: 5px;
+        }
+
+        #post-comment {
+            padding: 10px;
+            background: #e91e63;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* 天气信息样式 */
+        .weather-info {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .weather-info h3 {
+            color: #e91e63;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        #weather-text {
+            color: #e91e63;
+        }
+    </style>
+</head>
+<body>
+    <!-- 卡片内容 -->
+    <div class="card">
+        <img class="profile-image" src="https://xkh2008.github.io/Nacho.github.io/images/avatar.jpg" alt="头像">
+        <div class="username">NachoCrazy</div>
+        <p>哔哩哔哩 UID: <span style="margin-right: 0.5rem; display: inline-block;">1800466245</span></p>
+
+        <div class="social-links">
+            <a href="https://space.bilibili.com/1800466245?spm_id_from=333.337.0.0" target="_blank">访问我的哔哩哔哩空间</a>
+        </div>
+
+        <div class="contact-info">
+            <span style="display: block; margin-bottom: 0.5rem;">联系我:</span>
+            <a href="mailto:xkh2008@outlook.com">xkh2008@outlook.com</a>
+        </div>
+    </div>
+
+    <!-- 年份信息 -->
+    <div class="footer">
+        © 2025 - NachoCrazy
+    </div>
+
+    <!-- 音乐播放器 -->
+    <div class="music-player">
+        <audio id="musicPlayer" controls autoplay>
+            <source src="https://xkh2008.github.io/Nacho.github.io/music/0.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <button onclick="toggleMusic()">暂停/播放</button>
+        <input type="range" class="volume-slider" min="0" max="100" value="50" oninput="setVolume(this.value)">
+    </div>
+
+    <!-- 随机颜文字和语句容器 -->
+    <div class="cat-box">
+        <div class="cat-text" id="cat-text">颜文字加载中...</div>
+        <button onclick="showRandomContent()" class="cat-button">再来一个</button>
+    </div>
+
+    <!-- 提示语 -->
+    <div class="tooltip" id="tooltip">
+        <div class="tooltip-text">点击播放或暂停可以切换歌曲</div>
+    </div>
+
+    <!-- 欢迎信息 -->
+    <div class="welcome-message" id="welcome-text">欢迎光临！</div>
+
+    <!-- 访客计数器 -->
+    <div class="visitor-count" id="visitor-count">访客数：0</div>
+
+    <!-- 回到顶部按钮 -->
+    <button id="scroll-to-top">回到顶部</button>
+
+    <!-- 评论区 -->
+    <div class="comments-section">
+        <h3>留言板</h3>
+        <div id="comments-list"></div>
+        <input type="text" id="comment-input" placeholder="请输入评论">
+        <button id="post-comment">发表评论</button>
+    </div>
+
+    <!-- 天气信息 -->
+    <div class="weather-info">
+        <h3>当前天气</h3>
+        <div id="weather-text">加载中...</div>
+    </div>
+
+    <script>
+        // 音乐播放器控制
+        const player = document.getElementById('musicPlayer');
+        const toggleButton = document.querySelector('.music-player button');
+        const volumeSlider = document.querySelector('.volume-slider');
+        const cater = document.getElementById('cat-text');
+        const tooltip = document.getElementById('tooltip');
+        const welcomeText = document.getElementById('welcome-text');
+        const visitorCountElement = document.getElementById('visitor-count');
+        const scrollToTopButton = document.getElementById('scroll-to-top');
+        const commentInput = document.getElementById('comment-input');
+        const postCommentButton = document.getElementById('post-comment');
+        const commentsList = document.getElementById('comments-list');
+        const weatherText = document.getElementById('weather-text');
+
+        function toggleMusic() {
+            if (player.paused) {
+                playRandomMusic();
+                player.play();
+                toggleButton.textContent = '暂停';
+            } else {
+                player.pause();
+                toggleButton.textContent = '播放';
+            }
+        }
+
+        function setVolume(value) {
+            player.volume = value / 100;
+        }
+
+        // 随机播放音乐
+        const musicFiles = [
+            'https://xkh2008.github.io/Nacho.github.io/music/1.mp3',
+            'https://xkh2008.github.io/Nacho.github.io/music/2.mp3',
+            'https://xkh2008.github.io/Nacho.github.io/music/3.mp3'
+        ];
+
+        let currentSongIndex = 0;
+
+        function playRandomMusic() {
+            if (musicFiles.length === 0) return;
+
+            currentSongIndex = Math.floor(Math.random() * musicFiles.length);
+            player.src = musicFiles[currentSongIndex];
+        }
+
+        // 提示语只在初次进入网站时显示一次
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查是否是初次访问
+            if (!localStorage.getItem('visited')) {
+                tooltip.style.display = 'block';
+                localStorage.setItem('visited', true);
+            } else {
+                tooltip.style.display = 'none';
+            }
+
+            // 更新欢迎信息
+            updateWelcomeMessage();
+
+            // 更新访客计数
+            updateVisitorCount();
+
+            // 加载评论
+            loadComments();
+
+            // 加载天气信息
+            fetchWeather();
+        });
+
+        // 更新欢迎信息
+        function updateWelcomeMessage() {
+            const now = new Date();
+            const hours = now.getHours();
+            let greeting = '';
+            if (hours < 12) {
+                greeting = '早上好！';
+            } else if (hours < 18) {
+                greeting = '下午好！';
+            } else {
+                greeting = '晚上好！';
+            }
+            welcomeText.textContent = `${greeting} 欢迎访问 NachoCrazy 的主页`;
+        }
+
+        // 更新访客计数
+        function updateVisitorCount() {
+            let count = localStorage.getItem('visitorCount') || 0;
+            count = parseInt(count) + 1;
+            localStorage.setItem('visitorCount', count);
+            visitorCountElement.textContent = `访客数：${count}`;
+        }
+
+        // 随机颜文字和语句
+        const catContent = [
+            'Ciallo～(∠・ω< )⌒★',
+            '～卖萌中ヾ(=^･ω･^=)ノ',
+            '(=^･ω･^=)',
+            '喵喵！(*^ω^*)',
+            '(⁄ ⁄•⁄ω⁄•⁄ ⁄) ฅ 要摸摸头喵~',
+            '(=^･ｪ･^=) ฅ 今天的罐罐呢？',
+            '(=｀ω´=) ฅ 喵爪攻击！',
+            '(=✧ω✧=) ฅ 小鱼干分你一半！'
+        ];
+
+        function showRandomContent() {
+            if (catContent.length === 0) return;
+
+            const catIndex = Math.floor(Math.random() * catContent.length);
+            cater.textContent = catContent[catIndex];
+        }
+
+        // 回到顶部按钮
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 200) {
+                scrollToTopButton.style.display = 'block';
+            } else {
+                scrollToTopButton.style.display = 'none';
+            }
+        });
+
+        scrollToTopButton.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 评论区功能
+        function loadComments() {
+            const comments = JSON.parse(localStorage.getItem('comments')) || [];
+            commentsList.innerHTML = '';
+            comments.forEach((comment, index) => {
+                const commentElement = document.createElement('div');
+                commentElement.classList.add('comment');
+                commentElement.textContent = `${index + 1}. ${comment}`;
+                commentsList.appendChild(commentElement);
+            });
+        }
+
+        postCommentButton.addEventListener('click', () => {
+            const newComment = commentInput.value.trim();
+            if (newComment) {
+                const comments = JSON.parse(localStorage.getItem('comments')) || [];
+                comments.push(newComment);
+                localStorage.setItem('comments', JSON.stringify(comments));
+                loadComments();
+                commentInput.value = '';
+            }
+        });
+
+        // 天气信息
+        async function fetchWeather() {
+            try {
+                const apiKey = '35fafa8e097d1ccde3f3af2188d199ad'; // 替换为你的 OpenWeatherMap API Key
+                const city = 'AnHui'; // 替换为你想显示的城市
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&lang=zh_cn&units=metric`);
+                const data = await response.json();
+                const weatherDescription = data.weather[0].description;
+                const temperature = data.main.temp;
+                weatherText.textContent = `天气：${weatherDescription}，温度：${temperature}°C`;
+            } catch (error) {
+                weatherText.textContent = '无法获取天气信息';
+            }
+        }
+    </script>
+</body>
+</html>
