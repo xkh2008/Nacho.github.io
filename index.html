@@ -280,6 +280,12 @@
             border-radius: 5px;
         }
 
+        .comment-time {
+            color: #999;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
         #comment-input {
             width: 100%;
             padding: 10px;
@@ -413,6 +419,62 @@
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
+
+        /* 管理员入口和管理界面 */
+        #admin-login {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #e91e63;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        #admin-panel {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            width: 300px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        #user-management {
+            position: fixed;
+            top: 150px;
+            left: 20px;
+            width: 300px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .user-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        .user-item button {
+            margin-right: 5px;
+            padding: 3px 8px;
+            background: #e91e63;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -524,6 +586,19 @@
     </div>
     <button id="toggle-login">登录/注册</button>
 
+    <!-- 管理员入口和管理界面 -->
+    <button id="admin-login">管理员登录</button>
+    <div id="admin-panel">
+        <h3>管理员登录</h3>
+        <input type="text" id="admin-username" placeholder="管理员用户名">
+        <input type="password" id="admin-password" placeholder="管理员密码">
+        <button onclick="adminLogin()">登录</button>
+    </div>
+    <div id="user-management">
+        <h3>用户管理</h3>
+        <div id="user-list"></div>
+    </div>
+
     <script>
         // 音乐播放器控制
         const player = document.getElementById('musicPlayer');
@@ -544,9 +619,14 @@
         const toggleLoginButton = document.getElementById('toggle-login');
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
+        const adminLoginButton = document.getElementById('admin-login');
+        const adminPanel = document.getElementById('admin-panel');
+        const userManagement = document.getElementById('user-management');
+        const userList = document.getElementById('user-list');
 
         // 用户信息存储在 localStorage 中
         let currentUser = null;
+        let isAdmin = false;
 
         function toggleMusic() {
             if (player.paused) {
@@ -667,7 +747,10 @@
             comments.forEach((comment, index) => {
                 const commentElement = document.createElement('div');
                 commentElement.classList.add('comment');
-                commentElement.textContent = `${index + 1}. ${comment}`;
+                commentElement.innerHTML = `
+                    <div>${comment.user}: ${comment.content}</div>
+                    <div class="comment-time">${comment.time}</div>
+                `;
                 commentsList.appendChild(commentElement);
             });
         }
@@ -680,8 +763,28 @@
 
             const newComment = commentInput.value.trim();
             if (newComment) {
+                // 检查用户是否被禁言
+                const users = JSON.parse(localStorage.getItem('users')) || {};
+                if (users[currentUser] && users[currentUser].isMuted) {
+                    alert('您已被禁言，无法发表评论！');
+                    return;
+                }
+
+                // 检查评论内容是否包含屏蔽词
+                if (hasProfanity(newComment)) {
+                    alert('您的评论包含不当内容，无法发表！');
+                    return;
+                }
+
+                // 获取当前时间
+                const currentTime = new Date().toLocaleString();
+
                 const comments = JSON.parse(localStorage.getItem('comments')) || [];
-                comments.push(`用户 ${currentUser}：${newComment}`);
+                comments.push({
+                    user: currentUser,
+                    content: newComment,
+                    time: currentTime
+                });
                 localStorage.setItem('comments', JSON.stringify(comments));
                 loadComments();
                 commentInput.value = '';
@@ -695,7 +798,7 @@
         // 天气信息
         async function fetchWeather() {
             try {
-                const apiKey = 'dd1bab1dcab24ab5a6a80bdf04cb9c07'; // 替换为你的和风天气 API Key
+                const apiKey = 'YOUR_HEFENG_API_KEY'; // 替换为你的和风天气 API Key
                 const city = '北京'; // 替换为你想显示的城市
                 const response = await fetch(`https://devapi.qweather.com/v7/weather/now?location=${city}&key=${apiKey}`);
                 const data = await response.json();
@@ -711,10 +814,20 @@
         function checkLoginStatus() {
             currentUser = localStorage.getItem('currentUser');
             if (currentUser) {
-                loginSection.classList.remove('open');
+                const users = JSON.parse(localStorage.getItem('users')) || {};
+                if (users[currentUser] && users[currentUser].isAdmin) {
+                    isAdmin = true;
+                    adminLoginButton.style.display = 'none';
+                    userManagement.style.display = 'block';
+                } else {
+                    isAdmin = false;
+                    userManagement.style.display = 'none';
+                }
                 toggleLoginButton.textContent = '退出登录';
             } else {
+                isAdmin = false;
                 toggleLoginButton.textContent = '登录/注册';
+                userManagement.style.display = 'none';
             }
         }
 
@@ -734,6 +847,10 @@
 
             const users = JSON.parse(localStorage.getItem('users')) || {};
             if (users[username] && users[username].password === password) {
+                if (users[username].isBanned) {
+                    alert('您的账号已被封禁，无法登录！');
+                    return;
+                }
                 currentUser = username;
                 localStorage.setItem('currentUser', username);
                 checkLoginStatus();
@@ -768,22 +885,132 @@
 
             users[username] = {
                 password: password,
-                email: email
+                email: email,
+                isBanned: false,
+                isMuted: false,
+                isAdmin: false
             };
             localStorage.setItem('users', JSON.stringify(users));
             alert('注册成功！请登录。');
             showLoginForm();
         }
 
-        toggleLoginButton.addEventListener('click', () => {
-            if (currentUser) {
-                currentUser = null;
-                localStorage.removeItem('currentUser');
+        // 管理员登录
+        function adminLogin() {
+            const adminUsername = document.getElementById('admin-username').value;
+            const adminPassword = document.getElementById('admin-password').value;
+
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[adminUsername] && users[adminUsername].password === adminPassword && users[adminUsername].isAdmin) {
+                currentUser = adminUsername;
+                localStorage.setItem('currentUser', adminUsername);
                 checkLoginStatus();
+                showUserManagement();
+                alert('管理员登录成功！');
             } else {
-                loginSection.classList.toggle('open');
+                alert('管理员用户名或密码错误！');
             }
-        });
+        }
+
+        // 显示用户管理界面
+        function showUserManagement() {
+            userManagement.style.display = 'block';
+            loadUserList();
+        }
+
+        // 加载用户列表
+        function loadUserList() {
+            userList.innerHTML = '';
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            for (const username in users) {
+                const userElement = document.createElement('div');
+                userElement.classList.add('user-item');
+                userElement.innerHTML = `
+                    <strong>${username}</strong>
+                    <div>
+                        <button onclick="banUser('${username}')">封禁</button>
+                        <button onclick="unbanUser('${username}')">解封</button>
+                        <button onclick="muteUser('${username}')">禁言</button>
+                        <button onclick="unmuteUser('${username}')">解除禁言</button>
+                    </div>
+                `;
+                userList.appendChild(userElement);
+            }
+        }
+
+        // 封禁用户
+        function banUser(username) {
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[username]) {
+                users[username].isBanned = true;
+                localStorage.setItem('users', JSON.stringify(users));
+                alert(`用户 ${username} 已被封禁`);
+                loadUserList();
+            }
+        }
+
+        // 解封用户
+        function unbanUser(username) {
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[username]) {
+                users[username].isBanned = false;
+                localStorage.setItem('users', JSON.stringify(users));
+                alert(`用户 ${username} 已被解封`);
+                loadUserList();
+            }
+        }
+
+        // 禁言用户
+        function muteUser(username) {
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[username]) {
+                users[username].isMuted = true;
+                localStorage.setItem('users', JSON.stringify(users));
+                alert(`用户 ${username} 已被禁言`);
+                loadUserList();
+            }
+        }
+
+        // 解除禁言
+        function unmuteUser(username) {
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[username]) {
+                users[username].isMuted = false;
+                localStorage.setItem('users', JSON.stringify(users));
+                alert(`用户 ${username} 的禁言已解除`);
+                loadUserList();
+            }
+        }
+
+        // 屏蔽词系统
+        const profanityList = ['脏话1', '脏话2', '脏话3']; // 可以根据需要扩展列表
+
+        function hasProfanity(comment) {
+            return profanityList.some(word => comment.includes(word));
+        }
+
+        // 注册管理员账号（需要在页面加载后调用）
+        function registerAdmin() {
+            const adminUsername = 'NachoAdmin';
+            const adminPassword = 'admin114514';
+            const adminEmail = 'admin@example.com';
+
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (!users[adminUsername]) {
+                users[adminUsername] = {
+                    password: adminPassword,
+                    email: adminEmail,
+                    isBanned: false,
+                    isMuted: false,
+                    isAdmin: true
+                };
+                localStorage.setItem('users', JSON.stringify(users));
+                alert('管理员账号已创建：用户名 admin，密码 admin123');
+            }
+        }
+
+        // 注册管理员账号（只需调用一次）
+        // registerAdmin();
     </script>
 </body>
-</html>
+</html>f
