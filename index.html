@@ -432,7 +432,6 @@
             border-radius: 5px;
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            display: none;
         }
 
         #admin-panel {
@@ -817,7 +816,6 @@
                 const users = JSON.parse(localStorage.getItem('users')) || {};
                 if (users[currentUser] && users[currentUser].isAdmin) {
                     isAdmin = true;
-                    adminLoginButton.style.display = 'none';
                     userManagement.style.display = 'block';
                 } else {
                     isAdmin = false;
@@ -1028,6 +1026,9 @@
                 loginSection.classList.add('open');
             }
         });
+
+        // 确保管理员登录按钮在页面上可见
+        adminLoginButton.style.display = 'block';
     </script>
 </body>
 </html>
